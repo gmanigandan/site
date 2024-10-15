@@ -59,18 +59,17 @@
                     <div class="mb-3 col-md-6">
                         <label for="phone" class="form-label">Phone</label>
 
-                        <input type="hidden" id="phone" name="phone" autocomplete="off">
-                        {{-- Tel input --}}
+                        <input type="hidden" name="phone" autocomplete="off">
+                     
                         <span wire:ignore>
-                            <input type="tel" class="iti--laravel-tel-input  form-control "
+                            <input type="tel" class="  form-control "
                                 id="phone" data-phone-input-name="phone"
                                 data-phone-input="phone" wire:model="phone"
                                 phone-country-input="#countryCode" autocomplete="off">
                         </span>
                         <input wire:model="countryCode" type="hidden" id="countryCode" name="countryCode">
 
-                        {{-- <x-tel-input wire:model="phone" id="phone" name="phone" class="form-control" />
-                        <input wire:model="countryCode" type="hidden" id="countryCode" name="countryCode"> --}}
+                      
                         <div>
                             <strong>Phone:</strong> {{ $phone }} <br>
                             <strong>Country Code:</strong> {{ $countryCode }}
@@ -178,24 +177,50 @@
 
 </div>
 @push('scripts')
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let phoneInput = document.querySelector('#phone');
-
-    if (phoneInput) {
-        phoneInput.addEventListener('telchange', function (e) {
-            console.log(e.detail.valid); // Validation status of the number
-            console.log(e.detail.validNumber); // Internationally formatted number if valid
-            console.log(e.detail.number); // User-entered number
-            console.log(e.detail.dialCode); // Dial code of the country
-
-            // Set phone and country code in Livewire
-            @this.set('phone', e.detail.validNumber);
-            @this.set('countryCode', e.detail.dialCode);  // Update the country code
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.querySelector('#phone');
+        const iti = window.intlTelInput(input, {
+            initialCountry: "auto",
+            separateDialCode: true, // To get only the national number
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
         });
-    }
-});
 
- 
-    </script>
+        // Listen for number input changes
+        input.addEventListener('input', function () {
+            // Get the full number, including the dial code
+            const validNumber = iti.getNumber();
+            // Get the dial code
+            const dialCode = iti.getSelectedCountryData().dialCode;
+
+           
+    //         console.log(e.detail.valid); // Boolean: Validation status of the number
+    // console.log(e.detail.validNumber); // Returns internationally formatted number if number is valid and empty string if invalid
+    // console.log(e.detail.number); // Returns the user entered number, maybe auto-formatted internationally
+    // console.log(e.detail.country); // Returns the phone country iso2
+    // console.log(e.detail.countryName); // Returns the phone country name
+    // console.log(e.detail.dialCode); // Returns the dial code
+
+
+            // Set values in Livewire
+            @this.set('phone', validNumber);
+            @this.set('countryCode', dialCode);
+        });
+
+        // Listen for country change event
+        input.addEventListener('countrychange', function () {
+            // Update the country code
+            const validNumber = iti.getNumber();
+            const dialCode = iti.getSelectedCountryData().dialCode;
+            const countryName = iti.getSelectedCountryData().name;
+            const country = iti.getSelectedCountryData().iso2;
+            console.log(iti.getSelectedCountryData());
+            console.log(dialCode);
+            console.log(countryName);
+            console.log(country);
+            // Set the country code in Livewire
+            @this.set('countryCode', dialCode);
+        });
+    });
+</script>
 @endpush
