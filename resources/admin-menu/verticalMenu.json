@@ -1,0 +1,92 @@
+{
+    "menu": [
+        {
+            "url": "dashboard",
+            "name": "Dashboard",
+            "icon": "menu-icon tf-icons bx bx-home-circle",
+            "slug": "dashboard"
+        },
+       
+        {
+            "name": "Users",
+            "icon": "menu-icon tf-icons bx bx-user",
+            "slug": "customers",
+            "can": "menu.customers",
+            "slug_alias": "all.user,add.user,edit.user",
+            "submenu": [
+                {
+                    "url": "all.users",
+                    "name": "Users List",
+                    "slug": "all.users"
+                },
+                {
+                    "url": "all.users",
+                    "name": "Users Profile List",
+                    "slug": "all.users"
+                },
+                {
+                    "url": "all.users",
+                    "name": "Trial Users List",
+                    "slug": "all.users"
+                }
+            ]
+        } ,
+        {
+            "menuHeader": " Administrators "
+        },
+        {
+            "url": "admin.myprofile",
+            "name": "My Profile",
+            "icon": "menu-icon tf-icons bx bx-user",
+            "slug": "admin.myprofile"
+        },
+        {
+            "name": "Roles & Permissions",
+            "icon": "menu-icon tf-icons bx bx-check-shield",
+            "slug": "roles-permissions",
+            "can": "menu.roles-permissions",
+            "submenu": [
+                {
+                    "url": "all.permissions",
+                    "name": "All Permissions",
+                    "slug": "all.permissions"
+                },
+                {
+                    "url": "all.roles",
+                    "name": "All Roles",
+                    "slug": "all.roles"
+                },
+                {
+                    "url": "all.roles.permissions",
+                    "name": "All Roles in Permissions",
+                    "slug": "all.roles.permissions"
+                }
+            ]
+        },
+        {
+            "url": "all.admins",
+            "name": "Admin Users",
+            "icon": "menu-icon tf-icons bx bx-user-check",
+            "slug": "all.admins",
+            "can": "all.admins",
+            "slug_alias": "all.admins,add.admin,edit.admin"
+        },
+        {
+            "menuHeader": " Settings "
+        },
+        {
+            "url": "settings",
+            "name": "Settings",
+            "icon": "menu-icon tf-icons bx bx-cog",
+            "slug": "settings",
+            "can": "menu.settings"
+        },
+        {
+            "url": "admin.logout",
+            "name": "Logout",
+            "icon": "menu-icon bx bx-power-off me-2",
+            "slug": "admin.logout"
+            
+        }
+    ]
+}

@@ -1,0 +1,69 @@
+composer create-project laravel/laravel example-app
+
+cd example-app
+ 
+ ## to run application
+php artisan serve
+
+php artisan serve --port=8080
+
+
+## after databse setpup 
+
+php artisan migrate
+
+
+
+Create a New Table in Laravel
+
+php artisan make:migration create_settings
+
+php artisan make:migration add_group_name_in_permissions
+
+php artisan make:model Backend/Settings
+
+
+php artisan livewire:layout
+
+php artisan make:migration create_keywords_table --create=keywords
+
+php artisan migrate:rollback
+
+php artisan make:livewire Backend/Header
+php artisan make:livewire Backend/User/UserManager
+
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+
+php artisan storage:link
+
+
+
+Create the Seeder:
+
+Run the following command to create a new seeder:
+ 
+php artisan make:seeder AdminSeeder
+
+Run the Seeder:
+
+Once you have edited the seeder file, you can run it using:
+
+ 
+php artisan db:seed --class=AdminSeeder
+
+
+"autoload": {
+    "files": [
+        "app/Helpers/custom_helpers.php"
+    ]
+}
+
+Regenerate Composer Autoload Files: After updating the composer.json file, run the following command to regenerate the autoload files:
+
+ 
+composer dump-autoload
+
+
