@@ -39,7 +39,7 @@ class Index extends Component
     public function updatedSelectAll()
     {
         $this->selectedIds = $this->selectAll 
-            ? Admin::search($this->search)->orderBy($this->sortColumn, $this->sortDirection)->pluck('id') 
+            ? User::search($this->search)->orderBy($this->sortColumn, $this->sortDirection)->pluck('id') 
             : [];
     }
 
@@ -65,6 +65,22 @@ class Index extends Component
             : 'ASC';
 
         $this->sortColumn = $column;
+    }
+    public function doInactiveItem($id)
+    {
+
+
+        $userRow = User::findOrFail($id);
+        $userRow->update(['userStatus' => '1']);
+        session()->flash('success', 'User Inactivated Successfully!');
+
+    }
+    public function doActiveItem($id)
+    {
+
+        $userRow = User::findOrFail($id);
+        $userRow->update(['userStatus' => '0']);
+        session()->flash('success', 'User Activated Successfully!');
     }
 
     public function deleteModal($id) 

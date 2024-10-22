@@ -58,23 +58,18 @@
 
                     <div class="mb-3 col-md-6">
                         <label for="phone" class="form-label">Phone</label>
-
-                        <input type="hidden" name="phone" autocomplete="off">
-                     
                         <span wire:ignore>
-                            <input type="tel" class="  form-control "
-                                id="phone" data-phone-input-name="phone"
-                                data-phone-input="phone" wire:model="phone"
-                                phone-country-input="#countryCode" autocomplete="off">
+                            <input type="tel" class="  form-control " id="phone" data-phone-input-name="phone"
+                                data-phone-input="phone" wire:model="phone" phone-country-input="#countryCode"
+                                autocomplete="off">
                         </span>
                         <input wire:model="countryCode" type="hidden" id="countryCode" name="countryCode">
-
-                      
-                        <div>
+                        <input wire:model="countryDialCode" type="hidden" id="countryDialCode" name="countryDialCode">
+                        {{-- <div>
                             <strong>Phone:</strong> {{ $phone }} <br>
                             <strong>Country Code:</strong> {{ $countryCode }}
-                        </div>
-
+                            <strong>Country Dial Code:</strong> {{ $countryDialCode }}
+                        </div> --}}
                         @error('phone')
                             <div class="form-text text-danger">{{ $message }}</div>
                         @enderror
@@ -97,19 +92,12 @@
                     </div>
 
 
-                    <div class="mb-3 col-md-6">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" wire:model.lazy="address" placeholder="Address">
-                        @error('address')
-                            <div class="form-text text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
 
 
 
 
                 </div>
+
 
 
                 <div class="my-4">
@@ -133,8 +121,6 @@
                         <tbody>
                             @foreach ($inputs as $key => $value)
                                 <tr>
-
-
                                     <td>
                                         <input class="form-control" type="text"
                                             wire:model="keywordTitle.{{ $key }}" placeholder="Enter keyword">
@@ -160,7 +146,24 @@
 
 
                 </div>
+                <div class="my-4">
+                    <h6>Radioquery Phone Details</h6>
+                    <hr class="my-4">
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="tropoUserPhoneNo" class="form-label">Phone Number</label>
+                            <input class="form-control" type="text" wire:model.lazy="tropoUserPhoneNo"
+                                placeholder="Phone Number">
 
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="phNoDueDate" class="form-label">Phone No Due Date</label>
+                            <input class="form-control" type="text" wire:model.lazy="phNoDueDate"
+                                placeholder="Phone No Due Date">
+
+                        </div>
+                    </div>
+                </div>
                 <div class="mt-2">
                     <button type="submit" class="btn btn-primary me-2">Save
                         <div wire:loading wire:target="submit">
@@ -177,50 +180,47 @@
 
 </div>
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const input = document.querySelector('#phone');
-        const iti = window.intlTelInput(input, {
-            initialCountry: "auto",
-            separateDialCode: true, // To get only the national number
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.querySelector('#phone');
+
+            // Fetch IP info to get the country code
+            fetch('https://ipinfo.io?token=') // Replace 'YOUR_TOKEN' with your ipinfo.io token
+                .then(response => response.json())
+                .then(data => {
+                    const countryCode = data.country.toLowerCase(); // Get country code (e.g., "US")
+
+                    // Initialize intl-tel-input with auto country based on IP
+                    const iti = window.intlTelInput(input, {
+                        initialCountry: countryCode, // Set country based on IP
+                        separateDialCode: true,
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                    });
+
+                    // Listen for number input changes
+                    input.addEventListener('input', function() {
+                        const validNumber = iti.getNumber(); // Get the full number
+                        const countryDialCode = iti.getSelectedCountryData()
+                        .dialCode; // Get the dial code
+                        const countryCode = iti.getSelectedCountryData().iso2;
+                        // Set values in Livewire
+                        @this.set('phone', validNumber);
+                        @this.set('countryCode', countryCode);
+                        @this.set('countryDialCode', countryDialCode);
+                    });
+
+                    // Listen for country change event
+                    input.addEventListener('countrychange', function() {
+                        const countryDialCode = iti.getSelectedCountryData()
+                        .dialCode; // Get the new dial code
+                        const countryCode = iti.getSelectedCountryData().iso2; // Get the new dial code
+                        console.log('iti.getSelectedCountryData()', iti.getSelectedCountryData());
+                        // Update the country code in Livewire
+                        @this.set('countryCode', countryCode);
+                        @this.set('countryDialCode', countryDialCode);
+                    });
+                })
+                .catch(error => console.error('Error fetching IP info:', error));
         });
-
-        // Listen for number input changes
-        input.addEventListener('input', function () {
-            // Get the full number, including the dial code
-            const validNumber = iti.getNumber();
-            // Get the dial code
-            const dialCode = iti.getSelectedCountryData().dialCode;
-
-           
-    //         console.log(e.detail.valid); // Boolean: Validation status of the number
-    // console.log(e.detail.validNumber); // Returns internationally formatted number if number is valid and empty string if invalid
-    // console.log(e.detail.number); // Returns the user entered number, maybe auto-formatted internationally
-    // console.log(e.detail.country); // Returns the phone country iso2
-    // console.log(e.detail.countryName); // Returns the phone country name
-    // console.log(e.detail.dialCode); // Returns the dial code
-
-
-            // Set values in Livewire
-            @this.set('phone', validNumber);
-            @this.set('countryCode', dialCode);
-        });
-
-        // Listen for country change event
-        input.addEventListener('countrychange', function () {
-            // Update the country code
-            const validNumber = iti.getNumber();
-            const dialCode = iti.getSelectedCountryData().dialCode;
-            const countryName = iti.getSelectedCountryData().name;
-            const country = iti.getSelectedCountryData().iso2;
-            console.log(iti.getSelectedCountryData());
-            console.log(dialCode);
-            console.log(countryName);
-            console.log(country);
-            // Set the country code in Livewire
-            @this.set('countryCode', dialCode);
-        });
-    });
-</script>
+    </script>
 @endpush

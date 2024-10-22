@@ -20,6 +20,8 @@ php artisan make:migration create_settings
 
 php artisan make:migration add_group_name_in_permissions
 
+php artisan make:migration add_countryDialCode_in_users
+
 php artisan make:model Backend/Settings
 
 

@@ -31,7 +31,7 @@
                     <div class="dt-action-buttons text-end pt-3 pt-md-0">
                         <div class="dt-buttons">
                             @can('add.user')
-                                <a   href="{{ route('add.user') }}" class="btn btn-primary"><span><i
+                                <a href="{{ route('add.user') }}" class="btn btn-primary"><span><i
                                             class="bx bx-plus me-0 me-sm-1"></i><span class="d-none d-sm-inline-block">Add
                                             New User</span></span></a>
                             @endcan
@@ -52,13 +52,13 @@
                     </div>
                     <div class="col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">
 
-                      
+
 
 
 
                         <div class="dataTables_filter"><label>Search:
                                 <input wire:model.live="search" type="search" class="form-control"
-                                    placeholder="Name/Username/Email"></label></div>
+                                    placeholder="Name/phone/Email"></label></div>
 
                     </div>
                 </div>
@@ -82,7 +82,8 @@
 
                 <div class="position-relative">
 
-                    <div wire:loading.class="d-block" wire:target="search, perPage, doSort, selectAll"  wire:loading.remove.class="d-none"
+                    <div wire:loading.class="d-block" wire:target="search, perPage, doSort, selectAll"
+                        wire:loading.remove.class="d-none"
                         class="d-none position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                         style="background: rgba(255, 255, 255, 0.7); z-index: 10;">
                         <div class="text-center">
@@ -91,102 +92,115 @@
                             </div>
                         </div>
                     </div>
-                <table class="datatables-basic table border-top dataTable no-footer dtr-column" id="DataTables_Table_0"
-                    aria-describedby="DataTables_Table_0_info" style="width: 1390px;">
-                    <thead>
-                        <tr>
+                    <table class="datatables-basic table border-top dataTable no-footer dtr-column"
+                        id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 1390px;">
+                        <thead>
+                            <tr>
 
-                            <th class="dt-checkboxes-cell dt-checkboxes-select-all" style="width: 18px;">
-                                <input type="checkbox" wire:model.live='selectAll' class="form-check-input">
-                            </th>
-                            <th style="width: 18px;">
-                                #
-                            </th>
-                            <th class="sorting @if ($sortColumn == 'name' && $sortDirection == 'ASC') sorting_desc
+                                <th class="dt-checkboxes-cell dt-checkboxes-select-all" style="width: 18px;">
+                                    <input type="checkbox" wire:model.live='selectAll' class="form-check-input">
+                                </th>
+                                <th style="width: 18px;">
+                                    #
+                                </th>
+                                <th class="sorting @if ($sortColumn == 'name' && $sortDirection == 'ASC') sorting_desc
                                 @elseif ($sortColumn == 'name' && $sortDirection == 'DESC')
                                 sorting_asc @endif"
-                                wire:click="doSort('name')">Name</th>
-                            <th class="sorting @if ($sortColumn == 'username' && $sortDirection == 'ASC') sorting_desc
-                                    @elseif ($sortColumn == 'username' && $sortDirection == 'DESC')
+                                    wire:click="doSort('name')">Name</th>
+                                <th class="sorting @if ($sortColumn == 'phone' && $sortDirection == 'ASC') sorting_desc
+                                    @elseif ($sortColumn == 'phone' && $sortDirection == 'DESC')
                                     sorting_asc @endif"
-                                wire:click="doSort('username')">Username</th>
-                            <th class="sorting @if ($sortColumn == 'email' && $sortDirection == 'ASC') sorting_desc
+                                    wire:click="doSort('phone')">Phone</th>
+                                <th class="sorting @if ($sortColumn == 'email' && $sortDirection == 'ASC') sorting_desc
                                 @elseif ($sortColumn == 'email' && $sortDirection == 'DESC')
                                 sorting_asc @endif"
-                                wire:click="doSort('email')">Email</th>
-                            <th>Role</th>
-                            <th>Action</th>
+                                    wire:click="doSort('email')">Email</th>
 
+                                <th>Action</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($admins as $key => $item)
-                            <tr>
-                                <td class=" dt-checkboxes-cell">
-                                    <input type="checkbox" wire:key='{{ $item->id }}' value='{{ $item->id }}'
-                                        wire:model.live='selectedIds' class="dt-checkboxes form-check-input">
-                                </td>
-                                <td class=" dt-checkboxes-cell">{{ $admins->firstItem() + $key }}</td>
-                                <td>
-                                    {{ $item->name }}
-
-
-                                </td>
-                                <td>{{ $item->username }}</td>
-                                <td>{{ $item->email }}</td>
-                                <td>
-                                    @foreach ($item->roles as $role)
-                                        <span class="badge badge-pill bg-primary">{{ $role->name }}</span>
-                                    @endforeach
-                                </td>
-                                <td>
-                                    <div class="d-inline-block text-nowrap">
-                                        @can('edit.user')
-                                            <a  href="{{ route('edit.user', $item->id) }}"
-                                                class="btn btn-icon btn-sm btn-primary btn-icon"><i
-                                                    class="bx bx-edit"></i></a>
-                                        @endcan
-                                        @can('delete.user')
-                                            <a href="#" wire:click.prevent='deleteModal({{ $item->id }})'
-                                                class="btn btn-sm btn-icon btn-danger delete-record"><i
-                                                    class="bx bx-trash"></i></a>
-                                        @endcan
-
-                                    </div>
-
-
-                                </td>
 
                             </tr>
-                        @endforeach
+                        </thead>
+                        <tbody>
+                            @foreach ($admins as $key => $item)
+                                <tr>
+                                    <td class=" dt-checkboxes-cell">
+                                        <input type="checkbox" wire:key='{{ $item->id }}'
+                                            value='{{ $item->id }}' wire:model.live='selectedIds'
+                                            class="dt-checkboxes form-check-input">
+                                    </td>
+                                    <td class=" dt-checkboxes-cell">{{ $admins->firstItem() + $key }}</td>
+                                    <td>
+                                        {{ $item->name }}
 
-                        @if (!count($admins))
-                            <tr class="odd">
-                                <td valign="top" colspan="7" class="text-center">No data available in table</td>
-                            </tr>
+
+                                    </td>
+                                    <td>{{ $item->phone }}</td>
+                                    <td>{{ $item->email }}</td>
+
+                                    <td>
+                                        <div class="d-inline-block text-nowrap">
+                                            @can('edit.user')
+                                                <a href="{{ route('edit.user', $item->id) }}"
+                                                    class="btn btn-icon btn-sm btn-primary btn-icon"><i
+                                                        class="bx bx-edit"></i></a>
+                                            @endcan
+                                            @if ($item->userStatus == '0')
+                                                @can('inactive.user')
+                                                    <a href="#"
+                                                        wire:click.prevent="doInactiveItem('{{ $item->id }}')"
+                                                        class="btn btn-sm btn-icon btn-warning"><i
+                                                            class='bx bx-checkbox-minus'></i></a>
+                                                @endcan
+                                            @else
+                                                @can('active.user')
+                                                    <a href="#"
+                                                        wire:click.prevent="doActiveItem('{{ $item->id }}')"
+                                                        class="btn btn-sm btn-icon btn-success "><i
+                                                            class='bx bx-check-square'></i></a>
+                                                @endcan
+                                            @endif
+                                            @can('delete.user')
+                                                <a href="#" wire:click.prevent='deleteModal({{ $item->id }})'
+                                                    class="btn btn-sm btn-icon btn-danger delete-record"><i
+                                                        class="bx bx-trash"></i></a>
+                                            @endcan
+
+                                        </div>
+
+
+                                    </td>
+
+                                </tr>
+                            @endforeach
+
+                            @if (!count($admins))
+                                <tr class="odd">
+                                    <td valign="top" colspan="7" class="text-center">No data available in table
+                                    </td>
+                                </tr>
+                            @endif
+
+
+                    </table>
+                </div>
+                <div class="row mx-4">
+                    <div class="col-sm-12 col-md-6">
+
+                        @if ($selectedIds)
+                            <div class=" m-2">
+                                @can('delete.user')
+                                    <button class="btn btn-danger" wire:click="deleteModal('')">Delete
+                                        {{ count($selectedIds) }} Item(s)</button>
+                                @endcan
+                            </div>
                         @endif
 
-
-                </table>
-            </div>
-            <div class="row mx-4">
-                <div class="col-sm-12 col-md-6">
-
-                    @if ($selectedIds)
-                        <div class=" m-2">
-                            @can('delete.user')
-                                <button class="btn btn-danger" wire:click="deleteModal('')">Delete
-                                    {{ count($selectedIds) }} Item(s)</button>
-                            @endcan
-                        </div>
-                    @endif
-
+                    </div>
+                    <div class="col-sm-12 col-md-6 d-flex justify-content-end ">
+                        {{ $admins->onEachSide(1)->links('livewire::bootstrap') }}
+                    </div>
                 </div>
-                <div class="col-sm-12 col-md-6 d-flex justify-content-end ">
-                    {{ $admins->onEachSide(1)->links('livewire::bootstrap') }}
-                </div>
-            </div>
 
             </div>
         </div>
@@ -223,8 +237,8 @@
         });
 
         Livewire.on('paginationLoading', () => {
-        console.log('paginationLoading');
-    });
+            console.log('paginationLoading');
+        });
         document.addEventListener('deleteConfirmationModal', () => {
             $('#deleteConfirmationModal').modal('show');
         });

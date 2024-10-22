@@ -79,7 +79,7 @@ class AdminManager extends Component
         if($this->role){
             $role = Role::find($this->role);
             if ($role) {
-                $this->admin->syncRoles($role); // Sync the role with the admin user
+                $this->admin->syncRoles($role); 
             }
         }
         return $this->redirect(route('all.admins') , navigate: true);
